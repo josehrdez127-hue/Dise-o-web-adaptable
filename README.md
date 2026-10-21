@@ -1,12 +1,13 @@
 # Explorer App React
 
-Esta es mi primera migración de Explorer App a React. La tarjeta recibe un país por props y se reutiliza con tres datos locales.
+Esta es mi primera migración de Explorer App a React. Conservé el encabezado, la navegación, los filtros y el estilo claro con azul de Explorer 1. La tarjeta recibe un país por props y se reutiliza con cuatro datos locales.
 
 ## Tecnologías
 
 - React 18 y React DOM 18
 - Vite y TypeScript
 - Tailwind CSS v4
+- lucide-react para los iconos de búsqueda y navegación
 - pnpm
 
 ## Requisitos y comandos
@@ -38,6 +39,8 @@ pnpm build
 - `src/types/country.ts` conserva el contrato de país de la versión Vanilla TypeScript.
 - `src/utils/format.ts` conserva `formatPopulation`, que agrupa la población usando la configuración regional `es-SV`.
 - `src/data/countries-demo.ts` guarda cuatro ejemplos con el tipo `Country`.
+
+La barra de búsqueda y el selector conservan la apariencia de Explorer 1; el filtrado reactivo se trabajará en la siguiente sesión.
 
 ## Lo que aprendí
 

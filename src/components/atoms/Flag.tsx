@@ -10,7 +10,7 @@ export function Flag({ src, alt }: FlagProps): JSX.Element {
     <img
       src={src}
       alt={alt}
-      className="h-48 w-full bg-slate-50 object-contain dark:bg-slate-800"
+      className="h-48 w-full object-contain"
       loading="lazy"
     />
   );

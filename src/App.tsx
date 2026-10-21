@@ -1,4 +1,5 @@
 import type { JSX } from 'react';
+import { Search } from 'lucide-react';
 import { CountryGrid } from './components/organisms/CountryGrid';
 import { Header } from './components/organisms/Header';
 import { countriesDemo } from './data/countries-demo';
@@ -9,28 +10,51 @@ export default function App(): JSX.Element {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 px-5 py-10 text-slate-800 dark:bg-slate-950 dark:text-slate-100 sm:px-8 sm:py-14">
-      <div className="mx-auto max-w-6xl">
-        <Header>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-400">
-            Explorer App · Unidad 03
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <Header>Explorer App</Header>
+      <main className="mx-auto max-w-7xl px-6 py-14 md:px-8">
+        <section id="inicio" className="mb-10">
+          <h1 className="mb-3 text-4xl font-bold tracking-tight">
+            Explorar países del mundo
+          </h1>
+          <p className="text-base text-slate-600">
+            Busca un país o filtra por región para consultar su información
           </p>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h1 className="font-heading text-4xl font-semibold text-primary dark:text-white sm:text-5xl">
-                Países del mundo
-              </h1>
-              <p className="mt-3 max-w-xl text-base text-slate-600 dark:text-slate-300">
-                Un listado de países compuesto con componentes reutilizables.
-              </p>
-            </div>
-            <span className="border-l-2 border-amber-600 pl-3 text-sm font-medium text-slate-600 dark:text-slate-300">
-              {countriesDemo.length} países de ejemplo
-            </span>
-          </div>
-        </Header>
-        <CountryGrid countries={countriesDemo} onSelect={handleSelect} />
-      </div>
-    </main>
+        </section>
+
+        <section className="mb-10 flex flex-col justify-between gap-5 md:flex-row" aria-label="Filtros de países">
+          <label className="relative w-full md:w-[30rem]">
+            <span className="sr-only">Buscar país</span>
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
+            <input
+              type="search"
+              placeholder="Escriba el nombre del país..."
+              className="h-14 w-full rounded-xl border border-slate-200 bg-white pl-12 pr-4 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
+          </label>
+
+          <label>
+            <span className="sr-only">Filtrar por región</span>
+            <select
+              defaultValue="all"
+              className="h-14 w-full rounded-xl border border-slate-200 bg-white px-4 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 md:w-60"
+            >
+              <option value="all">Busque por región</option>
+              <option value="Americas">América</option>
+              <option value="Central America">América Central</option>
+              <option value="Europe">Europa</option>
+              <option value="Asia">Asia</option>
+              <option value="Africa">África</option>
+              <option value="Oceania">Oceanía</option>
+            </select>
+          </label>
+        </section>
+
+        <div id="paises">
+          <CountryGrid countries={countriesDemo} onSelect={handleSelect} />
+        </div>
+        <span id="acerca" className="sr-only">Explorer App</span>
+      </main>
+    </div>
   );
 }
