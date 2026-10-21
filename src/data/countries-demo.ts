@@ -38,3 +38,18 @@ export const paisTres: Country = {
   region: 'Europe',
   capital: ['Roma'],
 };
+
+export const paisCuatro: Country = {
+  name: { common: 'México' },
+  cca2: 'MX',
+  cca3: 'MEX',
+  flags: {
+    png: 'https://flagcdn.com/w640/mx.png',
+    alt: 'Bandera de México',
+  },
+  population: 128932753,
+  region: 'Americas',
+  capital: ['Ciudad de México'],
+};
+
+export const countriesDemo: Country[] = [paisUno, paisDos, paisTres, paisCuatro];
