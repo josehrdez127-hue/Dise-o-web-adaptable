@@ -1,15 +1,46 @@
 import type { JSX } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CountryGrid } from './components/organisms/CountryGrid';
 import { Header } from './components/organisms/Header';
 import type { RegionFilterValue } from './components/molecules/RegionFilter';
-import { countriesDemo } from './data/countries-demo';
+import type { Country } from './types/country';
+import { fetchCountries } from './services/countries';
 
 export default function App(): JSX.Element {
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [region, setRegion] = useState<RegionFilterValue>('all');
 
-  const filteredCountries = countriesDemo.filter((country) => {
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCountries(): Promise<void> {
+      try {
+        const result = await fetchCountries(controller.signal);
+        setCountries(result);
+      } catch (loadError) {
+        if (!controller.signal.aborted) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : 'Ocurrió un error inesperado al cargar los países.',
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadCountries();
+
+    return () => controller.abort();
+  }, []);
+
+  const filteredCountries = countries.filter((country) => {
     const matchesQuery = country.name.common
       .toLocaleLowerCase()
       .includes(query.trim().toLocaleLowerCase());
@@ -43,7 +74,15 @@ export default function App(): JSX.Element {
         </section>
 
         <div id="paises">
-          {filteredCountries.length > 0 ? (
+          {isLoading ? (
+            <p className="text-slate-600" role="status">
+              Cargando países...
+            </p>
+          ) : error ? (
+            <p className="text-red-700" role="alert">
+              No se pudieron cargar los países. {error}
+            </p>
+          ) : filteredCountries.length > 0 ? (
             <CountryGrid countries={filteredCountries} onSelect={handleSelect} />
           ) : (
             <p className="text-slate-600" role="status">

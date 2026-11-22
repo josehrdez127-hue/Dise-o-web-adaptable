@@ -1,6 +1,6 @@
 # Explorer App React
 
-Esta es mi primera migración de Explorer App a React. Conservé el encabezado, la navegación, los filtros y el estilo claro con azul de Explorer 1. La tarjeta recibe un país por props y se reutiliza con cuatro datos locales.
+Esta es mi migración de Explorer App a React. Conservé el encabezado, la navegación, los filtros y el estilo claro con azul de Explorer 1. La tarjeta recibe un país por props y se reutiliza con datos cargados desde API Countries.
 
 ## Tecnologías
 
@@ -49,18 +49,18 @@ El resultado de producción se genera en la carpeta `dist/`.
 
 ## Componentes y datos
 
-- `src/App.tsx` combina `Header` y `CountryGrid`, entrega el arreglo local y define la acción de selección.
+- `src/App.tsx` carga países al montar, muestra los estados de carga y error, conserva los filtros y entrega los resultados a `CountryGrid`.
+- `src/services/countries.ts` consulta API Countries, valida y adapta la respuesta al tipo `Country`, y acepta una señal para cancelar la solicitud.
 - `src/components/atoms/Badge.tsx` muestra la región y `src/components/atoms/Flag.tsx` muestra la bandera.
 - `src/components/molecules/CountryCard.tsx` recibe `country: Country` y `onSelect`; combina `Flag` y `Badge`.
 - `src/components/organisms/CountryGrid.tsx` recibe `countries: Country[]` y `onSelect`, crea una tarjeta por país con `map()` y una key basada en `cca2`, y adapta su cuadrícula de una a cuatro columnas según el ancho de pantalla.
 - `src/components/molecules/SearchBar.tsx` y `src/components/molecules/RegionFilter.tsx` son controles controlados con props y callbacks tipados.
 - `src/components/organisms/Header.tsx` recibe contenido mediante `children` y transmite el estado y los callbacks de filtros a sus controles.
-- `src/App.tsx` mantiene `query` y `region`, combina ambos filtros y entrega los países coincidentes a `CountryGrid`.
+- `src/App.tsx` mantiene `query` y `region`, combina ambos filtros localmente y entrega los países coincidentes a `CountryGrid`.
 - `src/types/country.ts` conserva el contrato de país de la versión Vanilla TypeScript.
 - `src/utils/format.ts` conserva `formatPopulation`, que agrupa la población usando la configuración regional `es-SV`.
-- `src/data/countries-demo.ts` guarda cuatro ejemplos con el tipo `Country`.
 
-La barra de búsqueda y el selector conservan la apariencia de Explorer 1 y funcionan como componentes controlados. La búsqueda por nombre y el filtro por región se aplican juntos; al limpiar la búsqueda o seleccionar la opción predeterminada de región, se actualizan los resultados inmediatamente.
+La barra de búsqueda y el selector conservan la apariencia de Explorer 1 y funcionan como componentes controlados. La búsqueda por nombre y el filtro por región se aplican juntos; al limpiar la búsqueda o seleccionar la opción predeterminada de región, se actualizan los resultados inmediatamente. La consulta se ejecuta una vez al montar el componente y se cancela al desmontarlo; los cambios en los filtros no vuelven a solicitar los datos.
 
 ## Lo que aprendí
 
@@ -69,4 +69,4 @@ La barra de búsqueda y el selector conservan la apariencia de Explorer 1 y func
 3. Reutilicé el tipo `Country` y `formatPopulation` de Vanilla TypeScript para mantener la forma de los datos y no repetir el formato de población.
 4. Comprobé que `CountryGrid` recibe el arreglo y entrega cada país y la acción a una tarjeta. La key usa el código estable `cca2`.
 5. `country` lleva los datos; `onSelect` lleva una función que se ejecuta al pulsar el botón. `Header` recibe su contenido como `children`.
-6. Agregué México al arreglo y apareció sin escribir otra tarjeta en `App`. La búsqueda reactiva y la carga con fetch quedan para las siguientes sesiones.
+6. La carga asíncrona sustituye los datos de demostración y muestra estados de carga y error sin recargar la página.
