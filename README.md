@@ -5,6 +5,7 @@ Esta es mi migración de Explorer App a React. Conservé el encabezado, la naveg
 ## Tecnologías
 
 - React 18 y React DOM 18
+- React Router DOM 6 para la navegación SPA
 - Vite y TypeScript
 - Tailwind CSS v4
 - lucide-react para los iconos de búsqueda y navegación
@@ -49,7 +50,9 @@ El resultado de producción se genera en la carpeta `dist/`.
 
 ## Componentes y datos
 
-- `src/App.tsx` integra los hooks, conserva los filtros y estados de interfaz, y entrega los resultados a `CountryGrid`.
+- `src/App.tsx` declara las rutas de inicio, detalle y dirección no reconocida.
+- `src/pages/HomePage.tsx` integra `Header`, `CountryGrid` y los hooks de países y búsqueda.
+- `src/pages/CountryDetailPage.tsx` muestra el país seleccionado y permite volver al listado.
 - `src/services/countries.ts` consulta los datos de países de [mledoze/countries](https://github.com/mledoze/countries) y las poblaciones del [Banco Mundial](https://api.worldbank.org/), valida y adapta las respuestas al tipo `Country`, y acepta una señal para cancelar las solicitudes.
 - `src/hooks/useCountries.ts` encapsula la carga de países, los estados de carga y error y la cancelación al desmontar.
 - `src/hooks/useSearch.ts` administra la consulta, la región y el filtrado combinado sin volver a solicitar los datos.
@@ -58,11 +61,10 @@ El resultado de producción se genera en la carpeta `dist/`.
 - `src/components/organisms/CountryGrid.tsx` recibe `countries: Country[]` y `onSelect`, crea una tarjeta por país con `map()` y una key basada en `cca2`, y adapta su cuadrícula de una a cuatro columnas según el ancho de pantalla.
 - `src/components/molecules/SearchBar.tsx` y `src/components/molecules/RegionFilter.tsx` son controles controlados con props y callbacks tipados.
 - `src/components/organisms/Header.tsx` recibe contenido mediante `children` y transmite el estado y los callbacks de filtros a sus controles.
-- `src/App.tsx` mantiene `query` y `region`, combina ambos filtros localmente y entrega los países coincidentes a `CountryGrid`.
 - `src/types/country.ts` conserva el contrato de país de la versión Vanilla TypeScript.
 - `src/utils/format.ts` conserva `formatPopulation`, que agrupa la población usando la configuración regional `es-SV`.
 
-La barra de búsqueda y el selector conservan la apariencia de Explorer 1 y funcionan como componentes controlados. `App.tsx` integra `useCountries()` y `useSearch()`; la búsqueda por nombre y el filtro por región se aplican juntos, y al limpiar la búsqueda o seleccionar la opción predeterminada se actualizan los resultados inmediatamente. `useCountries()` ejecuta la consulta al montar y la cancela al desmontar; los cambios en los filtros no vuelven a solicitar los datos.
+La barra de búsqueda y el selector conservan la apariencia de Explorer 1 y funcionan como componentes controlados. `main.tsx` configura `BrowserRouter`; `App.tsx` conecta `/` y `/country/:code`. `HomePage` integra `useCountries()` y `useSearch()`, y aplica juntos la búsqueda y el filtro de región. Al seleccionar un país, `useNavigate()` abre su ruta sin recargar la página; `CountryDetailPage` usa `Link` para volver al inicio. Los botones Atrás y Adelante del navegador recorren esas rutas. Al regresar al listado, la búsqueda y la región se reinician porque `HomePage` se desmonta y el estado local de `useSearch()` no se comparte ni persiste automáticamente.
 
 ## Evidencia S29
 

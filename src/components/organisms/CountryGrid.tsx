@@ -4,7 +4,7 @@ import { CountryCard } from '../molecules/CountryCard';
 
 interface CountryGridProps {
   countries: Country[];
-  onSelect: (code: string) => void;
+  onSelect: (code: string, countryName: string) => void;
 }
 
 export function CountryGrid({ countries, onSelect }: CountryGridProps): JSX.Element {
