@@ -1,101 +1,118 @@
-# Explorer App React
+# Explorer App
 
-Esta es mi migración de Explorer App a React. Conservé el encabezado, la navegación, los filtros y el estilo claro con azul de Explorer 1. La tarjeta recibe un país por props y se reutiliza con datos cargados desde fuentes públicas.
+Aplicación de exploración de países desarrollada con React y TypeScript. Permite buscar países, filtrar por región y consultar su información en una ruta de detalle, sin recargar la página.
+
+- **Repositorio:** [Diseño web adaptable](https://github.com/josehrdez127-hue/Dise-o-web-adaptable/tree/s25-atomic-design)
+- **Aplicación en Vercel:** pendiente de publicación y autenticación de la cuenta.
 
 ## Tecnologías
 
 - React 18 y React DOM 18
-- React Router DOM 6 para la navegación SPA
-- Vite y TypeScript
-- Tailwind CSS v4
-- lucide-react para los iconos de búsqueda y navegación
+- TypeScript 7 y Vite 8
+- React Router DOM 6
+- Tailwind CSS 4
+- lucide-react
 - pnpm
 
-## Cómo ejecutar el proyecto
+## Requisitos y ejecución
 
-Necesitas Node.js 22.12 o posterior dentro de la versión 22 y pnpm.
-
-1. Clona la rama de entrega:
+Se requiere Node.js 22.12 o posterior de la rama 22 y pnpm.
 
 ```sh
-git clone --branch parcial-2 --single-branch https://github.com/josehrdez127-hue/Parcial-de-dise-o-web-adaptable.git ExplorerApp
-cd ExplorerApp
-```
-
-2. Instala las dependencias:
-
-```sh
+git clone --branch s25-atomic-design --single-branch https://github.com/josehrdez127-hue/Dise-o-web-adaptable.git explorer-react
+cd explorer-react
 pnpm install
-```
-
-3. Inicia el servidor de desarrollo:
-
-```sh
 pnpm dev
 ```
 
-Vite mostrará en la terminal la dirección local para abrir la aplicación en el navegador. Para detener el servidor, pulsa `Ctrl+C`.
-
-4. Para generar la versión de producción y comprobar los tipos:
+Vite muestra la dirección local en la terminal. Comandos adicionales:
 
 ```sh
-pnpm build
+pnpm build    # comprueba los tipos y genera dist/
+pnpm lint     # ejecuta oxlint
+pnpm preview  # sirve localmente la compilación de producción
 ```
 
-El resultado de producción se genera en la carpeta `dist/`.
+## Funcionalidades
 
-## Captura
+- Listado de países con bandera, región, capital y población.
+- Búsqueda controlada por nombre y filtro por región, combinables y limpiables.
+- Estados de carga, error y resultados vacíos.
+- Navegación SPA desde una tarjeta a `/country/:code`, con detalle consultado a partir del código de la URL.
+- Detalle adaptable con capital, región, población, moneda, idiomas y países fronterizos.
+- Enlaces a países fronterizos y retorno al listado.
+- Rutas desconocidas que vuelven a la página de inicio.
 
-![Explorer App con tres tarjetas de países](public/captura-explorer.png)
+## Capturas
 
-## Componentes y datos
+### Listado de países
 
-- `src/App.tsx` declara las rutas de inicio, detalle y dirección no reconocida.
-- `src/pages/HomePage.tsx` integra `Header`, `CountryGrid` y los hooks de países y búsqueda.
-- `src/pages/CountryDetailPage.tsx` muestra el detalle del país, sus fronteras y permite volver al listado.
-- `src/services/countries.ts` consulta los datos de países de [mledoze/countries](https://github.com/mledoze/countries) y las poblaciones del [Banco Mundial](https://api.worldbank.org/), valida y adapta las respuestas al tipo `Country`, y acepta señales para cancelar las solicitudes.
-- `src/hooks/useCountries.ts` encapsula la carga de países, los estados de carga y error y la cancelación al desmontar.
-- `src/hooks/useCountryDetail.ts` carga el país de la ruta, reinicia la consulta cuando cambia el código y permite reintentar.
-- `src/hooks/useSearch.ts` administra la consulta, la región y el filtrado combinado sin volver a solicitar los datos.
-- `src/data/country-codes.ts` conserva las etiquetas de frontera alfa-3 y las relaciona con códigos alfa-2 para navegar.
-- `src/components/atoms/Badge.tsx` muestra la región y `src/components/atoms/Flag.tsx` muestra la bandera.
-- `src/components/molecules/CountryCard.tsx` recibe `country: Country` y `onSelect`; combina `Flag` y `Badge`.
-- `src/components/organisms/CountryGrid.tsx` recibe `countries: Country[]` y `onSelect`, crea una tarjeta por país con `map()` y una key basada en `cca2`, y adapta su cuadrícula de una a cuatro columnas según el ancho de pantalla.
-- `src/components/molecules/SearchBar.tsx` y `src/components/molecules/RegionFilter.tsx` son controles controlados con props y callbacks tipados.
-- `src/components/organisms/Header.tsx` recibe contenido mediante `children` y transmite el estado y los callbacks de filtros a sus controles.
-- `src/types/country.ts` conserva el contrato de país de la versión Vanilla TypeScript.
-- `src/types/country-detail.ts` define el país detallado y los destinos de navegación de sus fronteras.
-- `src/utils/format.ts` conserva `formatPopulation`, que agrupa la población usando la configuración regional `es-SV`.
+![Explorer App con el listado de países en escritorio](public/captura-explorer.png)
 
-La barra de búsqueda y el selector conservan la apariencia de Explorer 1 y funcionan como componentes controlados. `main.tsx` configura `BrowserRouter`; `App.tsx` conecta `/` y `/country/:code`. `HomePage` integra `useCountries()` y `useSearch()`, y aplica juntos la búsqueda y el filtro de región. Al seleccionar un país, `useNavigate()` abre su ruta sin recargar la página; `CountryDetailPage` usa `Link` para volver al inicio. Los botones Atrás y Adelante del navegador recorren esas rutas. Al regresar al listado, la búsqueda y la región se reinician porque `HomePage` se desmonta y el estado local de `useSearch()` no se comparte ni persiste automáticamente.
+### Detalle en escritorio
 
-La página de detalle consulta el código de la URL mediante `useParams()` y `useCountryDetail()`. Las fronteras se muestran con sus códigos alfa-3 (por ejemplo, `GTM`) y se enlazan mediante el código alfa-2 correspondiente (por ejemplo, `/country/GT`). Los campos opcionales usan alternativas legibles; los países sin fronteras muestran un mensaje específico.
+![Detalle de México en escritorio](public/evidencia-detalle-escritorio.png)
 
-## Evidencia S29
+### Detalle en móvil
 
-![Explorer App con países cargados desde las fuentes públicas](public/captura-s29.png)
+![Detalle de México en móvil](public/evidencia-detalle-movil.png)
 
-- **Dependencias:** `useEffect` usa `[]` para cargar los datos al montar. La búsqueda y el filtro se aplican sobre los datos ya cargados, por lo que no generan solicitudes adicionales.
-- **Limpieza:** `AbortController` cancela ambas solicitudes al desmontar el componente y se evita actualizar el estado tras la cancelación.
-- **Estados:** se muestra “Cargando países...” durante la consulta; los resultados aparecen al completarse; si falla, se anuncia el error. Los países sin dato de población muestran “Sin datos”.
+## Organización
 
-## Evidencia del detalle de países
+- `src/main.tsx` monta React y configura `BrowserRouter`.
+- `src/App.tsx` define las rutas `/`, `/country/:code` y la ruta comodín.
+- `src/pages/HomePage.tsx` compone el listado y conecta los controles con los hooks.
+- `src/pages/CountryDetailPage.tsx` resuelve el parámetro con `useParams` y presenta el detalle.
+- `src/components/` contiene los controles, tarjetas, encabezado y cuadrícula.
+- `src/hooks/useCountries.ts` gestiona carga, error y cancelación de la petición de listado.
+- `src/hooks/useSearch.ts` administra la consulta, la región y el filtrado combinado.
+- `src/hooks/useCountryDetail.ts` consulta el detalle por código, descarta solicitudes obsoletas y permite reintentar.
+- `src/services/countries.ts` obtiene, valida y adapta los datos.
+- `src/types/`, `src/data/` y `src/utils/` contienen los contratos TypeScript, la relación de códigos fronterizos y los formatos reutilizables.
 
-### Escritorio
+## Datos
 
-![Detalle de México en escritorio con sus países fronterizos](public/evidencia-detalle-escritorio.png)
+El servicio obtiene los países desde [mledoze/countries](https://github.com/mledoze/countries) y las cifras de población desde la API del [Banco Mundial](https://api.worldbank.org/). Las respuestas se validan y adaptan a los tipos de la aplicación. La fuente `public/data/countries.json` de la guía no existe en este repositorio.
 
-### Móvil
+## Migración de Vanilla TypeScript a React
 
-![Detalle de México en móvil con sus países fronterizos](public/evidencia-detalle-movil.png)
+- Se reutilizaron el contrato `Country` y la utilidad `formatPopulation` de la versión Vanilla.
+- La tarjeta que antes generaba e insertaba HTML se adaptó a un componente JSX con props tipadas; la cuadrícula se compone con componentes React.
+- La carga externa se implementó en el servicio actual: consulta dos fuentes públicas, valida sus respuestas y adapta el resultado. No se reutilizó una API local `countries.json`.
+- La navegación manual basada en hash se sustituyó por `BrowserRouter`, rutas declarativas, `useNavigate`, `Link` y `useParams`.
+- La carga, la búsqueda y el detalle se separaron en custom hooks; extraerlos no comparte automáticamente el estado entre páginas.
 
-La navegación fronteriza está comprobada: el código visible `GTM` enlaza a `/country/GT`.
+## Lista de verificación del cierre
 
-## Lo que aprendí
+Comprobaciones realizadas el **22 de noviembre de 2026** en local, salvo donde se indica:
 
-1. Antes la tarjeta generaba HTML y se insertaba manualmente en el DOM. Ahora `CountryCard` devuelve JSX y React la representa.
-2. El componente recibe un objeto `country`, tipado como `Country` en su interfaz de props.
-3. Reutilicé el tipo `Country` y `formatPopulation` de Vanilla TypeScript para mantener la forma de los datos y no repetir el formato de población.
-4. Comprobé que `CountryGrid` recibe el arreglo y entrega cada país y la acción a una tarjeta. La key usa el código estable `cca2`.
-5. `country` lleva los datos; `onSelect` lleva una función que se ejecuta al pulsar el botón. `Header` recibe su contenido como `children`.
-6. La carga asíncrona sustituye los datos de demostración y muestra estados de carga y error sin recargar la página.
+| Comprobación | Resultado | Evidencia u observación |
+|---|---|---|
+| Listado | Cumple | Se cargaron 250 países con sus tarjetas y banderas. Captura en la sección anterior. |
+| Búsqueda | Cumple | «Canadá» devuelve una tarjeta; al limpiar, regresa el listado. |
+| Filtro por región | Cumple | «América» devuelve 56 países en la prueba local. |
+| Búsqueda y región combinadas | Cumple | «Canadá» + «América» devuelve una tarjeta. |
+| Estado vacío | Cumple | Una búsqueda sin coincidencias presenta un mensaje de resultados vacíos. |
+| Carga y error de listado | Implementados | `useCountries` expone ambos estados; el componente muestra carga y anuncia el error. |
+| Detalle y parámetro de ruta | Cumple | `/country/CA` muestra Canadá. |
+| Recarga de URL directa | Cumple en local | Se recargó `/country/CA` y el detalle volvió a mostrarse. El alojamiento aún debe validarse. |
+| País no válido | Cumple | `/country/ZZ` muestra un mensaje comprensible y la acción «Reintentar». |
+| Fronteras | Cumple | Se verificó México → `GTM` → Guatemala en `/country/GT`. |
+| Diseño adaptable | Cumple en la prueba local | El detalle no tuvo desbordamiento horizontal en un viewport móvil de 375 px. Hay capturas móvil y escritorio. |
+| Build y lint | Cumple | `pnpm build` y `pnpm lint` finalizaron correctamente. |
+| Modo oscuro y debounce | No implementados | Eran comprobaciones condicionales («si ya estaba implementado» / «si ya forma parte»). |
+
+El estado de carga se observa durante las solicitudes; no se incluye una captura separada de ese instante. Las solicitudes de datos dependen de servicios públicos externos.
+
+## Publicación y medición inicial
+
+- **URL de Vercel:** pendiente. El entorno de trabajo no tiene una sesión de Vercel autenticada.
+- **Lighthouse:** pendiente hasta contar con la URL publicada. Registrar Performance, Accessibility y Best Practices, junto con la fecha, la URL, el modo móvil/escritorio y el informe o captura.
+- La configuración de Vercel conserva las rutas SPA para que las URLs de detalle puedan recargarse directamente.
+- **Pull Request:** no se utilizó en este cierre; los cambios se publicaron directamente en la rama `s25-atomic-design`.
+
+## Refactor y pendientes
+
+El refactor de este cierre memoriza en `useSearch` los resultados derivados: vuelve a filtrar solo si cambian los países, la consulta o la región. La búsqueda y el filtro conservan el mismo resultado observable, y los componentes visuales mantienen sus props tipadas.
+
+Pendiente: publicar en Vercel, validar la recarga de rutas en producción, registrar Lighthouse y enlazar esas evidencias. La autoevaluación de la Unidad 3 debe responderla el estudiante en Canvas, según su propio proceso de aprendizaje.
