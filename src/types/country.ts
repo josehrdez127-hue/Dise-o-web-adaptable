@@ -1,5 +1,6 @@
 export interface CountryNames {
   common: string;
+  official?: string;
 }
 
 export interface CountryFlags {

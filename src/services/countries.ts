@@ -1,4 +1,6 @@
 import type { Country, CountriesResponse, CountryFlags } from '../types/country';
+import { mapCountryBorders } from '../data/country-codes';
+import type { CountryDetail } from '../types/country-detail';
 
 const COUNTRIES_URL =
   'https://raw.githubusercontent.com/mledoze/countries/master/countries.json';
@@ -11,6 +13,34 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+function parseCurrencies(value: unknown): Country['currencies'] {
+  if (!isRecord(value)) return undefined;
+
+  const currencies: NonNullable<Country['currencies']> = {};
+  for (const [code, currency] of Object.entries(value)) {
+    if (!isRecord(currency) || typeof currency.name !== 'string') continue;
+
+    currencies[code] = {
+      name: currency.name,
+      ...(typeof currency.symbol === 'string' && { symbol: currency.symbol }),
+    };
+  }
+
+  return Object.keys(currencies).length > 0 ? currencies : undefined;
+}
+
+function parseLanguages(value: unknown): Country['languages'] {
+  if (!isRecord(value)) return undefined;
+
+  const languages = Object.fromEntries(
+    Object.entries(value).filter(
+      (entry): entry is [string, string] => typeof entry[1] === 'string',
+    ),
+  );
+
+  return Object.keys(languages).length > 0 ? languages : undefined;
 }
 
 function parsePopulationMap(payload: unknown): Map<string, number> {
@@ -71,6 +101,9 @@ function parseCountry(
     region: value.region,
   };
 
+  if (typeof value.name.official === 'string') {
+    country.name.official = value.name.official;
+  }
   if (typeof value.cca2 === 'string') {
     country.cca2 = value.cca2;
     country.flags = {
@@ -84,6 +117,14 @@ function parseCountry(
   }
   if (typeof value.subregion === 'string') country.subregion = value.subregion;
   if (isStringArray(value.capital)) country.capital = value.capital;
+  if (isStringArray(value.tld)) country.tld = value.tld;
+  if (isStringArray(value.borders)) country.borders = value.borders;
+
+  const currencies = parseCurrencies(value.currencies);
+  if (currencies) country.currencies = currencies;
+
+  const languages = parseLanguages(value.languages);
+  if (languages) country.languages = languages;
 
   if (isRecord(value.flags)) {
     const flags: CountryFlags = country.flags ?? {};
@@ -134,4 +175,30 @@ export async function fetchCountries(
   }
 
   return countries;
+}
+
+export async function fetchCountryByCode(
+  code: string,
+  signal: AbortSignal,
+): Promise<CountryDetail> {
+  const normalizedCode = code.trim().toUpperCase();
+  if (!normalizedCode) {
+    throw new Error('El código del país está vacío.');
+  }
+
+  const countries = await fetchCountries(signal);
+  const country = countries.find(
+    (item) =>
+      item.cca2?.toUpperCase() === normalizedCode ||
+      item.cca3?.toUpperCase() === normalizedCode,
+  );
+
+  if (!country) {
+    throw new Error(`No se encontró un país con el código ${normalizedCode}.`);
+  }
+
+  return {
+    ...country,
+    borderCountries: mapCountryBorders(country.borders, countries),
+  };
 }

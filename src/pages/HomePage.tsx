@@ -16,10 +16,8 @@ export function HomePage(): JSX.Element {
     onRegionChange,
   } = useSearch(countries);
 
-  function handleSelect(code: string, countryName: string): void {
-    navigate(`/country/${encodeURIComponent(code)}`, {
-      state: { countryName },
-    });
+  function handleSelect(code: string): void {
+    navigate(`/country/${encodeURIComponent(code)}`);
   }
 
   return (

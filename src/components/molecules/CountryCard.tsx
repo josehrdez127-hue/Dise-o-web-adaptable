@@ -6,7 +6,7 @@ import { Flag } from '../atoms/Flag';
 
 interface CountryCardProps {
   country: Country;
-  onSelect: (code: string, countryName: string) => void;
+  onSelect: (code: string) => void;
 }
 
 export function CountryCard({ country, onSelect }: CountryCardProps): JSX.Element {
@@ -51,11 +51,11 @@ export function CountryCard({ country, onSelect }: CountryCardProps): JSX.Elemen
         </div>
         <button
           type="button"
-          onClick={() => onSelect(countryCode, country.name.common)}
-          aria-label={`Seleccionar ${country.name.common}`}
+          onClick={() => onSelect(countryCode)}
+          aria-label={`Ver más sobre ${country.name.common}`}
           className="mt-5 text-sm font-semibold text-blue-600 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         >
-          Seleccionar país
+          Ver más
         </button>
       </div>
     </article>
