@@ -119,7 +119,7 @@ El informe completo está en [evidencia Lighthouse móvil](public/evidencia-ligh
 
 - `vercel.json` reescribe las rutas SPA a `index.html` para que las URLs de detalle puedan recargarse directamente.
 - **Integración Git de Vercel:** conectada a [josehrdez127-hue/Dise-o-web-adaptable](https://github.com/josehrdez127-hue/Dise-o-web-adaptable), con `s25-atomic-design` como rama de producción. Los nuevos cambios publicados en esa rama generan despliegues automáticos.
-- **Pull Request:** no se utilizó en este cierre; los cambios se publicaron directamente en la rama `s25-atomic-design`.
+- **Pull Request:** [#1 — Completa el cierre de la unidad y publica la aplicación](https://github.com/josehrdez127-hue/Dise-o-web-adaptable/pull/1), abierto desde `s25-atomic-design` hacia `main`.
 
 ## Refactor y pendientes
 
