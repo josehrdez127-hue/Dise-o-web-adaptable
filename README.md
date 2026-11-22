@@ -125,4 +125,4 @@ El informe completo está en [evidencia Lighthouse móvil](public/evidencia-ligh
 
 El refactor de este cierre memoriza en `useSearch` los resultados derivados: vuelve a filtrar solo si cambian los países, la consulta o la región. La búsqueda y el filtro conservan el mismo resultado observable, y los componentes visuales mantienen sus props tipadas.
 
-Pendiente: conectar el repositorio de GitHub a Vercel para automatizar futuros despliegues y completar la autoevaluación en Canvas, según el propio proceso de aprendizaje del estudiante.
+Pendiente: completar la autoevaluación y la entrega final en Canvas. La integración con GitHub y Vercel ya está configurada; los cambios publicados en `s25-atomic-design` activan despliegues automáticos.
