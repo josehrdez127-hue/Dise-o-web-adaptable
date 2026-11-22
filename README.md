@@ -118,7 +118,7 @@ El estado de carga se observa durante las solicitudes; no se incluye una captura
 El informe completo está en [evidencia Lighthouse móvil](public/evidencia-lighthouse-inicial-movil.html). El puntaje de Performance queda como línea base; no se aplicó una optimización específica en esta medición.
 
 - `vercel.json` reescribe las rutas SPA a `index.html` para que las URLs de detalle puedan recargarse directamente.
-- **Integración Git de Vercel:** pendiente. Vercel no pudo conectar automáticamente el repositorio de GitHub por falta de acceso de integración; el despliegue actual se hizo desde el commit publicado.
+- **Integración Git de Vercel:** conectada a [josehrdez127-hue/Dise-o-web-adaptable](https://github.com/josehrdez127-hue/Dise-o-web-adaptable), con `s25-atomic-design` como rama de producción. Los nuevos cambios publicados en esa rama generan despliegues automáticos.
 - **Pull Request:** no se utilizó en este cierre; los cambios se publicaron directamente en la rama `s25-atomic-design`.
 
 ## Refactor y pendientes
