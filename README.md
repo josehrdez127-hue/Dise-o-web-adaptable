@@ -3,7 +3,7 @@
 Aplicación de exploración de países desarrollada con React y TypeScript. Permite buscar países, filtrar por región y consultar su información en una ruta de detalle, sin recargar la página.
 
 - **Repositorio:** [Diseño web adaptable](https://github.com/josehrdez127-hue/Dise-o-web-adaptable/tree/s25-atomic-design)
-- **Aplicación en Vercel:** pendiente de publicación y autenticación de la cuenta.
+- **Aplicación en Vercel:** [Explorer App](https://explorer-react-josehrdez127.vercel.app/)
 
 ## Tecnologías
 
@@ -95,7 +95,7 @@ Comprobaciones realizadas el **22 de noviembre de 2026** en local, salvo donde s
 | Estado vacío | Cumple | Una búsqueda sin coincidencias presenta un mensaje de resultados vacíos. |
 | Carga y error de listado | Implementados | `useCountries` expone ambos estados; el componente muestra carga y anuncia el error. |
 | Detalle y parámetro de ruta | Cumple | `/country/CA` muestra Canadá. |
-| Recarga de URL directa | Cumple en local | Se recargó `/country/CA` y el detalle volvió a mostrarse. El alojamiento aún debe validarse. |
+| Recarga de URL directa | Cumple | Se recargó `/country/CA` tanto en local como en Vercel y el detalle volvió a mostrarse. |
 | País no válido | Cumple | `/country/ZZ` muestra un mensaje comprensible y la acción «Reintentar». |
 | Fronteras | Cumple | Se verificó México → `GTM` → Guatemala en `/country/GT`. |
 | Diseño adaptable | Cumple en la prueba local | El detalle no tuvo desbordamiento horizontal en un viewport móvil de 375 px. Hay capturas móvil y escritorio. |
@@ -106,13 +106,23 @@ El estado de carga se observa durante las solicitudes; no se incluye una captura
 
 ## Publicación y medición inicial
 
-- **URL de Vercel:** pendiente. El entorno de trabajo no tiene una sesión de Vercel autenticada.
-- **Lighthouse:** pendiente hasta contar con la URL publicada. Registrar Performance, Accessibility y Best Practices, junto con la fecha, la URL, el modo móvil/escritorio y el informe o captura.
-- La configuración de Vercel conserva las rutas SPA para que las URLs de detalle puedan recargarse directamente.
+- **URL de Vercel:** [https://explorer-react-josehrdez127.vercel.app/](https://explorer-react-josehrdez127.vercel.app/). Se verificó el detalle directo `/country/CA` en producción.
+- **Lighthouse inicial:** 22 de noviembre de 2026, modo móvil, Lighthouse 13.6.0 con Microsoft Edge.
+
+| Métrica | Puntaje |
+|---|---:|
+| Performance | 66 |
+| Accessibility | 100 |
+| Best Practices | 100 |
+
+El informe completo está en [evidencia Lighthouse móvil](public/evidencia-lighthouse-inicial-movil.html). El puntaje de Performance queda como línea base; no se aplicó una optimización específica en esta medición.
+
+- `vercel.json` reescribe las rutas SPA a `index.html` para que las URLs de detalle puedan recargarse directamente.
+- **Integración Git de Vercel:** pendiente. Vercel no pudo conectar automáticamente el repositorio de GitHub por falta de acceso de integración; el despliegue actual se hizo desde el commit publicado.
 - **Pull Request:** no se utilizó en este cierre; los cambios se publicaron directamente en la rama `s25-atomic-design`.
 
 ## Refactor y pendientes
 
 El refactor de este cierre memoriza en `useSearch` los resultados derivados: vuelve a filtrar solo si cambian los países, la consulta o la región. La búsqueda y el filtro conservan el mismo resultado observable, y los componentes visuales mantienen sus props tipadas.
 
-Pendiente: publicar en Vercel, validar la recarga de rutas en producción, registrar Lighthouse y enlazar esas evidencias. La autoevaluación de la Unidad 3 debe responderla el estudiante en Canvas, según su propio proceso de aprendizaje.
+Pendiente: conectar el repositorio de GitHub a Vercel para automatizar futuros despliegues y completar la autoevaluación en Canvas, según el propio proceso de aprendizaje del estudiante.
