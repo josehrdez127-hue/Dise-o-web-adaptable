@@ -1,53 +1,18 @@
 import type { JSX } from 'react';
-import { useEffect, useState } from 'react';
 import { CountryGrid } from './components/organisms/CountryGrid';
 import { Header } from './components/organisms/Header';
-import type { RegionFilterValue } from './components/molecules/RegionFilter';
-import type { Country } from './types/country';
-import { fetchCountries } from './services/countries';
+import { useCountries } from './hooks/useCountries';
+import { useSearch } from './hooks/useSearch';
 
 export default function App(): JSX.Element {
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [region, setRegion] = useState<RegionFilterValue>('all');
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadCountries(): Promise<void> {
-      try {
-        const result = await fetchCountries(controller.signal);
-        setCountries(result);
-      } catch (loadError) {
-        if (!controller.signal.aborted) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : 'Ocurrió un error inesperado al cargar los países.',
-          );
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    void loadCountries();
-
-    return () => controller.abort();
-  }, []);
-
-  const filteredCountries = countries.filter((country) => {
-    const matchesQuery = country.name.common
-      .toLocaleLowerCase()
-      .includes(query.trim().toLocaleLowerCase());
-    const matchesRegion = region === 'all' || country.region === region;
-
-    return matchesQuery && matchesRegion;
-  });
+  const { countries, isLoading, error } = useCountries();
+  const {
+    query,
+    region,
+    filteredCountries,
+    onQueryChange,
+    onRegionChange,
+  } = useSearch(countries);
 
   function handleSelect(code: string): void {
     console.log(code);
@@ -58,8 +23,8 @@ export default function App(): JSX.Element {
       <Header
         query={query}
         region={region}
-        onQueryChange={setQuery}
-        onRegionChange={setRegion}
+        onQueryChange={onQueryChange}
+        onRegionChange={onRegionChange}
       >
         Explorer App
       </Header>
