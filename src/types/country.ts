@@ -13,7 +13,7 @@ export interface Country {
   cca2?: string;
   cca3?: string;
   flags?: CountryFlags;
-  population: number;
+  population?: number;
   region: string;
   subregion?: string;
   capital?: string[];

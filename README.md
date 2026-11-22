@@ -1,6 +1,6 @@
 # Explorer App React
 
-Esta es mi migración de Explorer App a React. Conservé el encabezado, la navegación, los filtros y el estilo claro con azul de Explorer 1. La tarjeta recibe un país por props y se reutiliza con datos cargados desde API Countries.
+Esta es mi migración de Explorer App a React. Conservé el encabezado, la navegación, los filtros y el estilo claro con azul de Explorer 1. La tarjeta recibe un país por props y se reutiliza con datos cargados desde fuentes públicas.
 
 ## Tecnologías
 
@@ -50,7 +50,7 @@ El resultado de producción se genera en la carpeta `dist/`.
 ## Componentes y datos
 
 - `src/App.tsx` carga países al montar, muestra los estados de carga y error, conserva los filtros y entrega los resultados a `CountryGrid`.
-- `src/services/countries.ts` consulta API Countries, valida y adapta la respuesta al tipo `Country`, y acepta una señal para cancelar la solicitud.
+- `src/services/countries.ts` consulta los datos de países de [mledoze/countries](https://github.com/mledoze/countries) y las poblaciones del [Banco Mundial](https://api.worldbank.org/), valida y adapta las respuestas al tipo `Country`, y acepta una señal para cancelar las solicitudes.
 - `src/components/atoms/Badge.tsx` muestra la región y `src/components/atoms/Flag.tsx` muestra la bandera.
 - `src/components/molecules/CountryCard.tsx` recibe `country: Country` y `onSelect`; combina `Flag` y `Badge`.
 - `src/components/organisms/CountryGrid.tsx` recibe `countries: Country[]` y `onSelect`, crea una tarjeta por país con `map()` y una key basada en `cca2`, y adapta su cuadrícula de una a cuatro columnas según el ancho de pantalla.
@@ -61,6 +61,14 @@ El resultado de producción se genera en la carpeta `dist/`.
 - `src/utils/format.ts` conserva `formatPopulation`, que agrupa la población usando la configuración regional `es-SV`.
 
 La barra de búsqueda y el selector conservan la apariencia de Explorer 1 y funcionan como componentes controlados. La búsqueda por nombre y el filtro por región se aplican juntos; al limpiar la búsqueda o seleccionar la opción predeterminada de región, se actualizan los resultados inmediatamente. La consulta se ejecuta una vez al montar el componente y se cancela al desmontarlo; los cambios en los filtros no vuelven a solicitar los datos.
+
+## Evidencia S29
+
+![Explorer App con países cargados desde las fuentes públicas](public/captura-s29.png)
+
+- **Dependencias:** `useEffect` usa `[]` para cargar los datos al montar. La búsqueda y el filtro se aplican sobre los datos ya cargados, por lo que no generan solicitudes adicionales.
+- **Limpieza:** `AbortController` cancela ambas solicitudes al desmontar el componente y se evita actualizar el estado tras la cancelación.
+- **Estados:** se muestra “Cargando países...” durante la consulta; los resultados aparecen al completarse; si falla, se anuncia el error. Los países sin dato de población muestran “Sin datos”.
 
 ## Lo que aprendí
 

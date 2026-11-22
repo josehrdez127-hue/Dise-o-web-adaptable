@@ -1,7 +1,7 @@
 import type { Country } from '../types/country';
 
-export function formatPopulation(value: number): string {
-  return value.toLocaleString('es-SV');
+export function formatPopulation(value: number | undefined): string {
+  return value === undefined ? 'Sin datos' : value.toLocaleString('es-SV');
 }
 
 export function getCapital(country: Country): string {
